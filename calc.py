@@ -1,35 +1,83 @@
 from tkinter import *
 
+num = 0
+num2 = 0
+sign = None
+count = 0
 root = Tk()
 root.title("Calculator by Shaheer Kashif")
 
 def buttonclick(inp):
+    additional = e.get()
+    e.delete(0,END)
+    e.insert(0,additional+inp)
+    
+def buttonoperator(op):
+    global num,num2,sign,count
+    if op == "+" or op == "-" or op == "*" or op == "÷":
+        count += 1
+        if count >= 2:
+            num2 = e.get()
+            if sign == "+":
+                result = int(num) + int(num2)
+            elif sign == "-":
+                result = int(num) - int(num2)
+            elif sign == "*":
+                result = int(num) * int(num2)
+            elif sign == "÷":
+                result = int(num) / int(num2)
+            sign = op
+            e.delete(0,END)
+            e.insert(0,result)
+        else:
+            num = e.get()
+            sign = op
+            e.delete(0,END)
+        
+    elif op == "=":
+        num2 = e.get()
+        if op == "+":
+            result = int(num) + int(num2)
+        elif op == "-":
+            result = int(num) - int(num2)
+        elif op == "*":
+            result = int(num) * int(num2)
+        elif op == "÷":
+            result = int(num) / int(num2)
+        e.delete(0,END)
+        e.insert(0,result)
+
+def buttonclear():
+    e.delete(0,END)
+    
+
+def buttonequalto():
     pass
 
 e = Entry(root, width=40, borderwidth=10)
 e.grid(row=0,column=0,columnspan=4)
 
 # defining buttons
-button_1 = Button(root,text = "1",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_2 = Button(root,text = "2",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_3 = Button(root,text = "3",command = lambda: buttonclick(),padx = 28,pady = 14)
+button_1 = Button(root,text = "1",command = lambda: buttonclick('1'),padx = 28,pady = 14)
+button_2 = Button(root,text = "2",command = lambda: buttonclick('2'),padx = 28,pady = 14)
+button_3 = Button(root,text = "3",command = lambda: buttonclick('3'),padx = 28,pady = 14)
 
-button_4 = Button(root,text = "4",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_5 = Button(root,text = "5",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_6 = Button(root,text = "6",command = lambda: buttonclick(),padx = 28,pady = 14)
+button_4 = Button(root,text = "4",command = lambda: buttonclick('4'),padx = 28,pady = 14)
+button_5 = Button(root,text = "5",command = lambda: buttonclick('5'),padx = 28,pady = 14)
+button_6 = Button(root,text = "6",command = lambda: buttonclick('6'),padx = 28,pady = 14)
 
-button_7 = Button(root,text = "7",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_8 = Button(root,text = "8",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_9 = Button(root,text = "9",command = lambda: buttonclick(),padx = 28,pady = 14)
+button_7 = Button(root,text = "7",command = lambda: buttonclick('7'),padx = 28,pady = 14)
+button_8 = Button(root,text = "8",command = lambda: buttonclick('8'),padx = 28,pady = 14)
+button_9 = Button(root,text = "9",command = lambda: buttonclick('9'),padx = 28,pady = 14)
 
 button_0 = Button(root,text = "0",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_clear = Button(root,text = "C",command = lambda: buttonclick(),padx = 28,pady = 14)
+button_clear = Button(root,text = "C",command = buttonclear,padx = 28,pady = 14)
 
-button_add = Button(root,text = "+",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_subtract = Button(root,text = "-",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_multiply = Button(root,text = "x",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_divide = Button(root,text = "÷",command = lambda: buttonclick(),padx = 28,pady = 14)
-button_equal = Button(root,text = "=",command = lambda: buttonclick(),padx = 28,pady = 14)
+button_add = Button(root,text = "+",command = lambda: buttonoperator('+'),padx = 28,pady = 14)
+button_subtract = Button(root,text = "-",command = lambda: buttonoperator('-'),padx = 28,pady = 14)
+button_multiply = Button(root,text = "x",command = lambda: buttonoperator('*'),padx = 28,pady = 14)
+button_divide = Button(root,text = "÷",command = lambda: buttonoperator('÷'),padx = 28,pady = 14)
+button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 28,pady = 14)
 
 # placing buttons
 button_1.grid(row = 3,column = 0)

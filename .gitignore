@@ -35,9 +35,6 @@ MANIFEST
 *.manifest
 *.spec
 
-# User Data
-stats_sp.txt
-stats_mp.txt
 
 # Installer logs
 pip-log.txt
