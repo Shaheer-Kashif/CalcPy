@@ -10,6 +10,9 @@ root = Tk()
 root.title("Calculator by Shaheer Kashif")
 root.iconbitmap("ico/calc.ico")
 
+def ignore_keyboard_input(event):
+    return "break"
+
 def buttonclick(inp):
     global count,pas
     if count >= 2 and pas == 0:
@@ -20,10 +23,33 @@ def buttonclick(inp):
     e.insert(0,additional+inp)
     
 def buttonoperator(op):
-    global num,num2,sign,count,pas
-    if op == "+" or op == "-" or op == "*" or op == "÷":
-        count += 1
-        if count >= 2:
+    if e.get() == "":
+        pass
+    else:
+        global num,num2,sign,count,pas
+        if op == "+" or op == "-" or op == "*" or op == "÷":
+            count += 1
+            if count >= 2:
+                num2 = e.get()
+                if sign == "+":
+                    result = int(num) + int(num2)
+                elif sign == "-":
+                    result = int(num) - int(num2)
+                elif sign == "*":
+                    result = int(num) * int(num2)
+                elif sign == "÷":
+                    result = int(num) / int(num2)
+                num = result
+                pas = 0
+                sign = op
+                e.delete(0,END)
+                e.insert(0,result)
+            else:
+                num = e.get()
+                sign = op
+                e.delete(0,END)
+        elif op == "=":
+            count = 0
             num2 = e.get()
             if sign == "+":
                 result = int(num) + int(num2)
@@ -33,34 +59,13 @@ def buttonoperator(op):
                 result = int(num) * int(num2)
             elif sign == "÷":
                 result = int(num) / int(num2)
-            num = result
-            pas = 0
-            sign = op
             e.delete(0,END)
             e.insert(0,result)
-        else:
-            num = e.get()
-            sign = op
-            e.delete(0,END)
-        
-    elif op == "=":
-        count = 0
-        num2 = e.get()
-        if sign == "+":
-            result = int(num) + int(num2)
-        elif sign == "-":
-            result = int(num) - int(num2)
-        elif sign == "*":
-            result = int(num) * int(num2)
-        elif sign == "÷":
-            result = int(num) / int(num2)
-        e.delete(0,END)
-        e.insert(0,result)
 
 def buttonclear():
     e.delete(0,END)
 
-e = Entry(root, width=40, borderwidth=10)
+e = Entry(root, width=40, borderwidth=10,state="normal")
 e.grid(row=0,column=0,columnspan=4)
 
 # defining buttons
@@ -107,5 +112,7 @@ button_subtract.grid(row = 2,column = 3)
 button_multiply.grid(row = 3,column = 3)
 button_divide.grid(row = 4,column = 3)
 
+# Event binding to ignore keyboard input
+e.bind("<Key>", ignore_keyboard_input)
 
 root.mainloop()
