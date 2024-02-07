@@ -22,19 +22,19 @@ def buttonclick(inp):
     if sign == "=":
         history_label.delete(0,END)
         e.delete(0,END)
+        sign = ""
     additional = e.get()
     e.delete(0,END)
     e.insert(0,additional+inp)
     
 def buttonoperator(op):
-    global hist
-    hist = e.get() + op
-    history_label.insert(END,hist)
-    history_label.grid(row = 0,column=0,columnspan=5)
     if e.get() == "":
         pass
     else:
-        global num,num2,sign,count,pas
+        global num,num2,sign,count,pas,hist
+        hist = e.get() + op
+        history_label.insert(END,hist)
+        history_label.grid(row = 0,column=0,columnspan=5)
         if op == "+" or op == "-" or op == "x" or op == "÷":
             count += 1
             if count >= 2:
@@ -79,15 +79,24 @@ def buttonoperator(op):
                 result = round(result,8)
             e.insert(0,result)
 
+def buttondecimal():
+    if "." in e.get():
+        pass
+    else:
+        e.insert(END,".")
+
 def buttonclear():
     history_label.delete(0,END)
     e.delete(0,END)
     
 def backspace():
-    temp = e.get()
-    e.delete(0,END)
-    temp = temp.replace(temp[len(temp)-1],"",1)
-    e.insert(0,temp)
+    if e.get() == "":
+        pass
+    else:
+        temp = e.get()
+        e.delete(0,END)
+        temp = temp.replace(temp[len(temp)-1],"",1)
+        e.insert(0,temp)
 
 history_label = Entry(root,width=50,justify="right")
 history_label.grid(row = 0,column=0,columnspan=5)
@@ -108,7 +117,7 @@ button_8 = Button(root,text = "8",command = lambda: buttonclick('8'),padx = 28,p
 button_9 = Button(root,text = "9",command = lambda: buttonclick('9'),padx = 28,pady = 14,font= "helvetica",bg="white")
 
 button_0 = Button(root,text = "0",command = lambda: buttonclick('0'),padx = 28,pady = 14,font= "helvetica",bg="white")
-button_decimal = Button(root,text = ".",command = lambda: buttonclick('.'),padx = 28,pady = 14,font= "helvetica",bg="white")
+button_decimal = Button(root,text = ".",command = buttondecimal,padx = 28,pady = 14,font= "helvetica",bg="white")
 button_clear = Button(root,text = "C",command = buttonclear,padx = 34,pady = 14,font= "helvetica")
 button_backspace = Button(root, text = "⌫",command = backspace,padx = 30,pady = 14,font= "helvetica")
 
