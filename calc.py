@@ -15,8 +15,7 @@ def ignore_keyboard_input(event):
     return "break"
 
 def buttonclick(inp):
-    global count,pas,sign,hist
-    hist += inp
+    global count,pas,sign
     if count >= 2 and pas == 0:
         e.delete(0,END)
         pas = 1
@@ -29,9 +28,8 @@ def buttonclick(inp):
     
 def buttonoperator(op):
     global hist
-    hist += op
-    history_label = Entry(root,width=50,justify="right")
-    history_label.insert(0,hist)
+    hist = e.get() + op
+    history_label.insert(END,hist)
     history_label.grid(row = 0,column=0,columnspan=5)
     if e.get() == "":
         pass
@@ -82,6 +80,7 @@ def buttonoperator(op):
             e.insert(0,result)
 
 def buttonclear():
+    history_label.delete(0,END)
     e.delete(0,END)
     
 def backspace():
