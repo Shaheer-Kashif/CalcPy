@@ -19,7 +19,7 @@ def buttonclick(inp):
     if count >= 2 and pas == 0:
         e.delete(0,END)
         pas = 1
-    if sign == "=":
+    if sign == "=" or sign == "!":
         history_label.delete(0,END)
         e.delete(0,END)
         sign = ""
@@ -32,13 +32,16 @@ def buttonoperator(op):
         pass
     else:
         global num,num2,sign,count,pas,hist
-        if "=" in hist:
-            hist = hist.replace("",hist[0:hist.index("=")])
+        if "=" in hist or "!" in history_label.get():
+            if "=" in hist:
+                hist = hist.replace("",hist[0:hist.index("=")])
+            elif "!" in history_label.get():
+                hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("!")])
             history_label.delete(0,END)
         hist = e.get() + op
         history_label.insert(END,hist)
         history_label.grid(row = 0,column=0,columnspan=5)
-        if op == "+" or op == "-" or op == "x" or op == "÷":
+        if op == "+" or op == "-" or op == "x" or op == "÷" or op == "^":
             count += 1
             if count >= 2:
                 num2 = e.get()
@@ -50,6 +53,8 @@ def buttonoperator(op):
                     result = float(num) * float(num2)
                 elif sign == "÷":
                     result = float(num) / float(num2)
+                elif sign == "^":
+                    result = pow(float(num),float(num2))
                 num = result
                 pas = 0
                 sign = op
@@ -74,6 +79,8 @@ def buttonoperator(op):
                 result = float(num) * float(num2)
             elif sign == "÷":
                 result = float(num) / float(num2)
+            elif sign == "^":
+                result = pow(float(num),float(num2))
             sign = op
             e.delete(0,END)
             if result == int(result):
@@ -87,6 +94,8 @@ def buttondecimal():
         pass
     else:
         e.insert(END,".")
+        num = e.get()
+        
 
 def buttonclear():
     history_label.delete(0,END)
@@ -100,6 +109,22 @@ def backspace():
         e.delete(0,END)
         temp = temp.replace(temp[len(temp)-1],"",1)
         e.insert(0,temp)
+        
+def factorial():
+    global sign
+    if e.get() == "":
+        pass
+    else:
+        num = e.get()
+        history_label.delete(0,END)
+        history_label.insert(0,str(num)+"!")
+        result = 1
+        lis = list(range(2,int(num)+1))
+        for num in lis:
+            result *= num
+        e.delete(0,END)
+        e.insert(0,result)
+        sign = "!"
 
 history_label = Entry(root,width=50,justify="right")
 history_label.grid(row = 0,column=0,columnspan=5)
@@ -121,15 +146,16 @@ button_9 = Button(root,text = "9",command = lambda: buttonclick('9'),padx = 28,p
 
 button_0 = Button(root,text = "0",command = lambda: buttonclick('0'),padx = 28,pady = 14,font= "helvetica",bg="white")
 button_decimal = Button(root,text = ".",command = buttondecimal,padx = 28,pady = 14,font= "helvetica",bg="white")
-button_clear = Button(root,text = "C",command = buttonclear,padx = 34,pady = 14,font= "helvetica")
-button_backspace = Button(root, text = "⌫",command = backspace,padx = 30,pady = 14,font= "helvetica")
+button_clear = Button(root,text = "C",command = buttonclear,padx = 29,pady = 14,font= "helvetica")
+button_backspace = Button(root, text = "⌫",command = backspace,padx = 24,pady = 14,font= "helvetica")
 
 button_add = Button(root,text = "+",command = lambda: buttonoperator('+'),padx = 26,pady = 14,font= "helvetica")
 button_subtract = Button(root,text = "-",command = lambda: buttonoperator('-'),padx = 28,pady = 14,font= "helvetica")
-button_multiply = Button(root,text = "x",command = lambda: buttonoperator('x'),padx = 27,pady = 14,font= "helvetica")
+button_multiply = Button(root,text = "×",command = lambda: buttonoperator('x'),padx = 26,pady = 14,font= "helvetica")
 button_divide = Button(root,text = "÷",command = lambda: buttonoperator('÷'),padx = 26,pady = 14,font= "helvetica")
 button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 28,pady = 14,font= "helvetica",bg="#176cb5",fg="white")
-
+button_exponent = Button(root,text = "xʸ",command = lambda: buttonoperator('^'),padx = 28,pady = 14,font= "helvetica")
+button_factorial = Button(root,text = "x!",command = factorial,padx = 28,pady = 14,font= "helvetica")
 # placing buttons
 button_1.grid(row = 4,column = 0)
 button_2.grid(row = 4,column = 1)
@@ -154,6 +180,8 @@ button_add.grid(row = 2,column = 3)
 button_subtract.grid(row = 3,column = 3)
 button_multiply.grid(row = 4,column = 3)
 button_divide.grid(row = 5,column = 3)
+button_exponent.grid(row = 4,column=4)
+button_factorial.grid(row = 5,column=4)
 
 # Event binding to ignore keyboard input
 e.bind("<Key>", ignore_keyboard_input)
