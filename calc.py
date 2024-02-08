@@ -32,6 +32,9 @@ def buttonoperator(op):
         pass
     else:
         global num,num2,sign,count,pas,hist
+        if "=" in hist:
+            hist = hist.replace("",hist[0:hist.index("=")])
+            history_label.delete(0,END)
         hist = e.get() + op
         history_label.insert(END,hist)
         history_label.grid(row = 0,column=0,columnspan=5)
