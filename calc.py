@@ -6,6 +6,7 @@ sign = None
 count = 0
 pas = True
 hist = ""
+result = 0
 
 root = Tk()
 root.title("Calculator by Shaheer Kashif")
@@ -31,7 +32,7 @@ def buttonoperator(op):
     if e.get() == "":
         pass
     else:
-        global num,num2,sign,count,pas,hist
+        global num,num2,sign,count,pas,hist,result
         if "=" in hist or "!" in history_label.get():
             if "=" in hist:
                 hist = hist.replace("",hist[0:hist.index("=")])
@@ -126,9 +127,9 @@ def factorial():
         e.insert(0,result)
         sign = "!"
 
-history_label = Entry(root,width=50,justify="right")
+history_label = Entry(root,width=63,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
-e = Entry(root, width=25,state="normal",font=("Helvetica",20),justify="right")
+e = Entry(root, width=25,state="normal",font=("Helvetica",20),justify="right",borderwidth=0)
 e.grid(row=1,column=0,columnspan=5)
 
 # defining buttons
