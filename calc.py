@@ -127,6 +127,22 @@ def factorial():
         e.insert(0,result)
         sign = "!"
 
+def plusminus():
+    return
+
+def square():
+    return
+
+def sq_root():
+    return
+
+def percent():
+    return
+
+def reciprocal():
+    return
+
+
 history_label = Entry(root,width=63,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
 e = Entry(root, width=25,state="normal",font=("Helvetica",20),justify="right",borderwidth=0)
@@ -146,7 +162,8 @@ button_8 = Button(root,text = "8",command = lambda: buttonclick('8'),padx = 28,p
 button_9 = Button(root,text = "9",command = lambda: buttonclick('9'),padx = 28,pady = 14,font= "helvetica",bg="white")
 
 button_0 = Button(root,text = "0",command = lambda: buttonclick('0'),padx = 28,pady = 14,font= "helvetica",bg="white")
-button_decimal = Button(root,text = ".",command = buttondecimal,padx = 28,pady = 14,font= "helvetica",bg="white")
+button_decimal = Button(root,text = ".",command = buttondecimal,padx = 31,pady = 14,font= "helvetica",bg="white")
+button_plusminus = Button(root,text = "+/-",command = plusminus,padx = 22,pady = 14,font= "helvetica",bg="white")
 button_clear = Button(root,text = "C",command = buttonclear,padx = 29,pady = 14,font= "helvetica")
 button_backspace = Button(root, text = "⌫",command = backspace,padx = 24,pady = 14,font= "helvetica")
 
@@ -154,35 +171,49 @@ button_add = Button(root,text = "+",command = lambda: buttonoperator('+'),padx =
 button_subtract = Button(root,text = "-",command = lambda: buttonoperator('-'),padx = 28,pady = 14,font= "helvetica")
 button_multiply = Button(root,text = "×",command = lambda: buttonoperator('x'),padx = 26,pady = 14,font= "helvetica")
 button_divide = Button(root,text = "÷",command = lambda: buttonoperator('÷'),padx = 26,pady = 14,font= "helvetica")
-button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 28,pady = 14,font= "helvetica",bg="#176cb5",fg="white")
+button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 26,pady = 14,font= "helvetica",bg="#176cb5",fg="white")
 button_exponent = Button(root,text = "xʸ",command = lambda: buttonoperator('^'),padx = 28,pady = 14,font= "helvetica")
 button_factorial = Button(root,text = "x!",command = factorial,padx = 28,pady = 14,font= "helvetica")
+button_square = Button(root,text = "x²",command = square,padx = 24,pady = 14,font= "helvetica")
+button_squareroot = Button(root,text = "√x",command = sq_root,padx = 25,pady = 14,font= "helvetica")
+
+button_percent = Button(root,text = "%",command = percent,padx = 28,pady = 14,font= "helvetica")
+button_reciprocal = Button(root,text = "1/x",command = reciprocal,padx = 23,pady = 14,font= "helvetica")
+
 # placing buttons
-button_1.grid(row = 4,column = 0)
-button_2.grid(row = 4,column = 1)
-button_3.grid(row = 4,column = 2)
+button_1.grid(row = 5,column = 0)
+button_2.grid(row = 5,column = 1)
+button_3.grid(row = 5,column = 2)
 
-button_4.grid(row = 3,column = 0)
-button_5.grid(row = 3,column = 1)
-button_6.grid(row = 3,column = 2)
+button_4.grid(row = 4,column = 0)
+button_5.grid(row = 4,column = 1)
+button_6.grid(row = 4,column = 2)
 
-button_7.grid(row = 2,column = 0)
-button_8.grid(row = 2,column = 1)
-button_9.grid(row = 2,column = 2)
+button_7.grid(row = 3,column = 0)
+button_8.grid(row = 3,column = 1)
+button_9.grid(row = 3,column = 2)
 
-button_0.grid(row = 5,column = 1)
-button_decimal.grid(row = 5,column = 0)
+button_0.grid(row = 6,column = 1)
+button_plusminus.grid(row=6,column=0)
+button_decimal.grid(row = 6,column = 2)
 button_clear.grid(row = 3,column = 4)
 
-button_equal.grid(row = 5,column=2)
+button_equal.grid(row = 6,column=3)
 button_backspace.grid(row = 2,column=4)
 
 button_add.grid(row = 2,column = 3)
+button_square.grid(row = 2 , column= 0)
+button_squareroot.grid(row = 2 , column= 1)
+button_reciprocal.grid(row = 2, column = 2)
+
 button_subtract.grid(row = 3,column = 3)
 button_multiply.grid(row = 4,column = 3)
+button_percent.grid(row=4, column=4)
 button_divide.grid(row = 5,column = 3)
-button_exponent.grid(row = 4,column=4)
-button_factorial.grid(row = 5,column=4)
+button_equal.grid(row = 6,column=3)
+button_exponent.grid(row = 5,column=4)
+button_factorial.grid(row = 6,column=4)
+
 
 # Event binding to ignore keyboard input
 e.bind("<Key>", ignore_keyboard_input)
