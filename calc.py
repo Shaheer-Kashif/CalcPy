@@ -1,4 +1,5 @@
 from tkinter import *
+from math import *
 
 num = 0
 num2 = 0
@@ -20,7 +21,7 @@ def buttonclick(inp):
     if count >= 2 and pas == 0:
         e.delete(0,END)
         pas = 1
-    if sign == "=" or sign == "!":
+    if sign == "=" or sign == "!" or sign == "square":
         history_label.delete(0,END)
         e.delete(0,END)
         sign = ""
@@ -33,11 +34,14 @@ def buttonoperator(op):
         pass
     else:
         global num,num2,sign,count,pas,hist,result
-        if "=" in hist or "!" in history_label.get():
+        if "=" in hist or "!" in history_label.get() or "²" in history_label.get():
             if "=" in hist:
                 hist = hist.replace("",hist[0:hist.index("=")])
-            elif "!" in history_label.get():
-                hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("!")])
+            elif "!" in history_label.get() or "²" in history_label.get():
+                if "!" in history_label.get():
+                    hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("!")])
+                elif "²" in history_label.get():
+                    hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("²")])
             history_label.delete(0,END)
         hist = e.get() + op
         history_label.insert(END,hist)
@@ -111,30 +115,40 @@ def backspace():
         temp = temp.replace(temp[len(temp)-1],"",1)
         e.insert(0,temp)
         
-def factorial():
+def oneoffs(operation):
     global sign
     if e.get() == "":
         pass
     else:
-        num = e.get()
-        history_label.delete(0,END)
-        history_label.insert(0,str(num)+"!")
-        result = 1
-        lis = list(range(2,int(num)+1))
-        for num in lis:
-            result *= num
-        e.delete(0,END)
-        e.insert(0,result)
-        sign = "!"
+        if operation == '!':
+            num = e.get()
+            history_label.delete(0,END)
+            history_label.insert(0,str(num)+"!")
+            result = 1
+            lis = list(range(2,int(num)+1))
+            for num in lis:
+                result *= num
+            e.delete(0,END)
+            e.insert(0,result)
+            
+        elif operation == 'square' or operation == 'root':
+            num = e.get()
+            history_label.delete(0,END)
+            if operation == 'root':
+                history_label.insert(0,"√"+str(num))
+                result = sqrt(float(num))
+                
+            else:
+                history_label.insert(0,str(num)+"²")
+                result = int(num)*int(num)
+            e.delete(0,END)
+            e.insert(0,result)
+            
+        sign = operation
 
 def plusminus():
     return
 
-def square():
-    return
-
-def sq_root():
-    return
 
 def percent():
     return
@@ -173,9 +187,9 @@ button_multiply = Button(root,text = "×",command = lambda: buttonoperator('x'),
 button_divide = Button(root,text = "÷",command = lambda: buttonoperator('÷'),padx = 26,pady = 14,font= "helvetica")
 button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 26,pady = 14,font= "helvetica",bg="#176cb5",fg="white")
 button_exponent = Button(root,text = "xʸ",command = lambda: buttonoperator('^'),padx = 28,pady = 14,font= "helvetica")
-button_factorial = Button(root,text = "x!",command = factorial,padx = 28,pady = 14,font= "helvetica")
-button_square = Button(root,text = "x²",command = square,padx = 24,pady = 14,font= "helvetica")
-button_squareroot = Button(root,text = "√x",command = sq_root,padx = 25,pady = 14,font= "helvetica")
+button_factorial = Button(root,text = "x!",command = lambda: oneoffs('!'),padx = 28,pady = 14,font= "helvetica")
+button_square = Button(root,text = "x²",command = lambda: oneoffs('square'),padx = 24,pady = 14,font= "helvetica")
+button_squareroot = Button(root,text = "√x",command = lambda: oneoffs('root'),padx = 25,pady = 14,font= "helvetica")
 
 button_percent = Button(root,text = "%",command = percent,padx = 28,pady = 14,font= "helvetica")
 button_reciprocal = Button(root,text = "1/x",command = reciprocal,padx = 23,pady = 14,font= "helvetica")
