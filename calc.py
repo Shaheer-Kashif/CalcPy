@@ -21,7 +21,7 @@ def buttonclick(inp):
     if count >= 2 and pas == 0:
         e.delete(0,END)
         pas = 1
-    if sign == "=" or sign == "!" or sign == "square":
+    if sign == "=" or sign == "!" or sign == "square" or sign == "root" or sign == "reciprocal":
         history_label.delete(0,END)
         e.delete(0,END)
         sign = ""
@@ -34,14 +34,19 @@ def buttonoperator(op):
         pass
     else:
         global num,num2,sign,count,pas,hist,result
-        if "=" in hist or "!" in history_label.get() or "²" in history_label.get():
+        if "=" in hist or "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get():
             if "=" in hist:
                 hist = hist.replace("",hist[0:hist.index("=")])
-            elif "!" in history_label.get() or "²" in history_label.get():
+            elif "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get():
                 if "!" in history_label.get():
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("!")])
                 elif "²" in history_label.get():
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("²")])
+                elif "√" in history_label.get():
+                    hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("√")+1])
+                elif "ᛑ/"in history_label.get():
+                    hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("ᛑ/")])
+                    
             history_label.delete(0,END)
         hist = e.get() + op
         history_label.insert(END,hist)
@@ -131,18 +136,22 @@ def oneoffs(operation):
             e.delete(0,END)
             e.insert(0,result)
             
-        elif operation == 'square' or operation == 'root':
+        elif operation == 'square' or operation == 'root' or operation == 'reciprocal':
             num = e.get()
             history_label.delete(0,END)
             if operation == 'root':
                 history_label.insert(0,"√"+str(num))
                 result = sqrt(float(num))
-                
-            else:
+            elif operation == 'square':
                 history_label.insert(0,str(num)+"²")
                 result = int(num)*int(num)
+            else:
+                history_label.insert(0,"ᛑ/"+str(num))
+                result = 1/float(num)
+            
             e.delete(0,END)
             e.insert(0,result)
+            
             
         sign = operation
 
@@ -192,7 +201,7 @@ button_square = Button(root,text = "x²",command = lambda: oneoffs('square'),pad
 button_squareroot = Button(root,text = "√x",command = lambda: oneoffs('root'),padx = 25,pady = 14,font= "helvetica")
 
 button_percent = Button(root,text = "%",command = percent,padx = 28,pady = 14,font= "helvetica")
-button_reciprocal = Button(root,text = "1/x",command = reciprocal,padx = 23,pady = 14,font= "helvetica")
+button_reciprocal = Button(root,text = "1/x",command = lambda: oneoffs('reciprocal'),padx = 23,pady = 14,font= "helvetica")
 
 # placing buttons
 button_1.grid(row = 5,column = 0)
