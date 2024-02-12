@@ -8,6 +8,7 @@ count = 0
 pas = True
 hist = ""
 result = 0
+oneoff = 0
 
 root = Tk()
 root.title("Calculator by Shaheer Kashif")
@@ -33,8 +34,8 @@ def buttonoperator(op):
     if e.get() == "":
         pass
     else:
-        global num,num2,sign,count,pas,hist,result
-        if "=" in hist or "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get():
+        global num,num2,sign,count,pas,hist,result,oneoff
+        if ("=" in hist or "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get()) and count == 0:
             if "=" in hist:
                 hist = hist.replace("",hist[0:hist.index("=")])
             elif "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get():
@@ -48,7 +49,11 @@ def buttonoperator(op):
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("ᛑ/")])
                     
             history_label.delete(0,END)
-        hist = e.get() + op
+        if oneoff == 0:
+            hist = e.get() + op
+        else: 
+            hist = op
+            oneoff = 0
         history_label.insert(END,hist)
         history_label.grid(row = 0,column=0,columnspan=5)
         if op == "+" or op == "-" or op == "x" or op == "÷" or op == "^":
@@ -105,9 +110,16 @@ def buttondecimal():
     else:
         e.insert(END,".")
         num = e.get()
-        
-
+    
 def buttonclear():
+    global hist,num,num2,sign,count,pas,result
+    hist = ""
+    num = 0
+    num2 = 0
+    sign = None
+    count = 0
+    pas = True
+    result = 0
     history_label.delete(0,END)
     e.delete(0,END)
     
@@ -125,46 +137,70 @@ def oneoffs(operation):
     if e.get() == "":
         pass
     else:
-        if operation == '!':
-            num = e.get()
-            history_label.delete(0,END)
-            history_label.insert(0,str(num)+"!")
-            result = 1
-            lis = list(range(2,int(num)+1))
-            for num in lis:
-                result *= num
+        if sign != "":
+            global num2,count,oneoff
+            if operation == '!':
+                num2 = e.get()
+                history_label.insert(END,str(num2)+"!")
+                lis = list(range(2,int(num2)+1))
+                num2 = 1
+                for res in lis:
+                    num2 *= res
+            elif operation == 'square' or operation == 'root' or operation == 'reciprocal':
+                num2 = e.get()
+                if operation == 'root':
+                    history_label.insert(END,"√"+str(num2))
+                    num2 = sqrt(float(num2))
+                elif operation == 'square':
+                    history_label.insert(END,str(num2)+"²")
+                    num2 = int(num2)*int(num2)
+                else:
+                    history_label.insert(END,"(ᛑ/"+str(num2)+")")
+                    num2 = 1/float(num2)
+                    
             e.delete(0,END)
-            e.insert(0,result)
-            
-        elif operation == 'square' or operation == 'root' or operation == 'reciprocal':
-            num = e.get()
-            history_label.delete(0,END)
-            if operation == 'root':
-                history_label.insert(0,"√"+str(num))
-                result = sqrt(float(num))
-            elif operation == 'square':
-                history_label.insert(0,str(num)+"²")
-                result = int(num)*int(num)
-            else:
-                history_label.insert(0,"ᛑ/"+str(num))
-                result = 1/float(num)
-            
-            e.delete(0,END)
-            e.insert(0,result)
-            
-            
-        sign = operation
+            e.insert(0,num2)
+            oneoff = 1
+            count += 1
 
+            
+                       
+        else:
+            if operation == '!':
+                num = e.get()
+                history_label.delete(0,END)
+                history_label.insert(0,str(num)+"!")
+                result = 1
+                lis = list(range(2,int(num)+1))
+                for num in lis:
+                    result *= num
+                e.delete(0,END)
+                e.insert(0,result)
+                
+            elif operation == 'square' or operation == 'root' or operation == 'reciprocal':
+                num = e.get()
+                history_label.delete(0,END)
+                if operation == 'root':
+                    history_label.insert(0,"√"+str(num))
+                    result = sqrt(float(num))
+                elif operation == 'square':
+                    history_label.insert(0,str(num)+"²")
+                    result = int(num)*int(num)
+                else:
+                    history_label.insert(0,"ᛑ/"+str(num))
+                    result = 1/float(num)
+                
+                e.delete(0,END)
+                e.insert(0,result)
+                
+                
+            sign = operation
+            
 def plusminus():
     return
 
-
 def percent():
     return
-
-def reciprocal():
-    return
-
 
 history_label = Entry(root,width=63,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
