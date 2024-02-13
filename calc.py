@@ -162,8 +162,6 @@ def oneoffs(operation):
             e.insert(0,num2)
             oneoff = 1
             count += 1
-
-            
                        
         else:
             if operation == '!':
@@ -193,14 +191,25 @@ def oneoffs(operation):
                 e.delete(0,END)
                 e.insert(0,result)
                 
-                
             sign = operation
             
 def plusminus():
-    return
+    if e.get() == "":
+        pass
+    else:
+        tempnum = e.get()
+        tempnum = -1*(float(tempnum))
+        e.delete(0,END)
+        e.insert(0,tempnum)
 
 def percent():
-    return
+    if e.get() == "":
+        pass
+    else:
+        tempnum = e.get()
+        tempnum = (float(tempnum)) / 100
+        e.delete(0,END)
+        e.insert(0,tempnum)
 
 history_label = Entry(root,width=63,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
