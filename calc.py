@@ -210,6 +210,23 @@ def percent():
         tempnum = (float(tempnum)) / 100
         e.delete(0,END)
         e.insert(0,tempnum)
+        
+def trigno_funcs(*args):
+    global trig_val
+    if trig_val.get() == "Trignometric Functions" or e.get() == "":
+        pass
+    else:
+        tempnum = e.get()
+        if trig_val.get() == "sin":
+            tempnum = sin(float(tempnum))
+        elif trig_val.get() == "cos":
+            tempnum = cos(float(tempnum))
+        elif trig_val.get() == "tan":
+            tempnum = tan(float(tempnum))
+        e.delete(0,END)
+        e.insert(0,tempnum)
+        
+        
 
 history_label = Entry(root,width=63,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
@@ -248,39 +265,47 @@ button_squareroot = Button(root,text = "√x",command = lambda: oneoffs('root'),
 button_percent = Button(root,text = "%",command = percent,padx = 28,pady = 14,font= "helvetica")
 button_reciprocal = Button(root,text = "1/x",command = lambda: oneoffs('reciprocal'),padx = 23,pady = 14,font= "helvetica")
 
+trig_val = StringVar()
+trig_val.set("Trignometric Functions")
+trig_options = ["sin","cos","tan"]
+trigfunc = OptionMenu(root, trig_val, *trig_options)
+trig_val.trace("w",trigno_funcs)
+trigfunc.grid(row=2,column=0,columnspan=5)
+
+                        
 # placing buttons
-button_1.grid(row = 5,column = 0)
-button_2.grid(row = 5,column = 1)
-button_3.grid(row = 5,column = 2)
+button_1.grid(row = 6,column = 0)
+button_2.grid(row = 6,column = 1)
+button_3.grid(row = 6,column = 2)
 
-button_4.grid(row = 4,column = 0)
-button_5.grid(row = 4,column = 1)
-button_6.grid(row = 4,column = 2)
+button_4.grid(row = 5,column = 0)
+button_5.grid(row = 5,column = 1)
+button_6.grid(row = 5,column = 2)
 
-button_7.grid(row = 3,column = 0)
-button_8.grid(row = 3,column = 1)
-button_9.grid(row = 3,column = 2)
+button_7.grid(row = 4,column = 0)
+button_8.grid(row = 4,column = 1)
+button_9.grid(row = 4,column = 2)
 
-button_0.grid(row = 6,column = 1)
-button_plusminus.grid(row=6,column=0)
-button_decimal.grid(row = 6,column = 2)
-button_clear.grid(row = 3,column = 4)
+button_0.grid(row = 7,column = 1)
+button_plusminus.grid(row=7,column=0)
+button_decimal.grid(row = 7,column = 2)
+button_clear.grid(row = 4,column = 4)
 
-button_equal.grid(row = 6,column=3)
-button_backspace.grid(row = 2,column=4)
+button_equal.grid(row = 7,column=3)
+button_backspace.grid(row = 3,column=4)
 
-button_add.grid(row = 2,column = 3)
-button_square.grid(row = 2 , column= 0)
-button_squareroot.grid(row = 2 , column= 1)
-button_reciprocal.grid(row = 2, column = 2)
+button_add.grid(row = 3,column = 3)
+button_square.grid(row = 3 , column= 0)
+button_squareroot.grid(row = 3 , column= 1)
+button_reciprocal.grid(row = 3, column = 2)
 
-button_subtract.grid(row = 3,column = 3)
-button_multiply.grid(row = 4,column = 3)
-button_percent.grid(row=4, column=4)
-button_divide.grid(row = 5,column = 3)
-button_equal.grid(row = 6,column=3)
-button_exponent.grid(row = 5,column=4)
-button_factorial.grid(row = 6,column=4)
+button_subtract.grid(row = 4,column = 3)
+button_multiply.grid(row = 5,column = 3)
+button_percent.grid(row=5, column=4)
+button_divide.grid(row = 6,column = 3)
+button_equal.grid(row = 7,column=3)
+button_exponent.grid(row = 6,column=4)
+button_factorial.grid(row = 7,column=4)
 
 
 # Event binding to ignore keyboard input
