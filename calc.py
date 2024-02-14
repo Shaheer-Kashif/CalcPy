@@ -212,43 +212,62 @@ def percent():
         e.insert(0,tempnum)
         
 def trigno_funcs(*args):
-    global trig_val
-    if trig_val.get() == "Trignometric Functions" or e.get() == "":
+    trig_option = trig_val.get()
+    trig_val.set("Trignometric Functions")
+    trigfunc = OptionMenu(root, trig_val, *trig_options)
+    trigfunc.grid(row=2,column=0,columnspan=2)
+    if trig_option == "Trignometric Functions" or e.get() == "":
         pass
     else:
         tempnum = e.get()
-        if trig_val.get() == "sin":
+        if trig_option == "sin":
             tempnum = sin(float(tempnum))
-        elif trig_val.get() == "cos":
+        elif trig_option == "cos":
             tempnum = cos(float(tempnum))
-        elif trig_val.get() == "tan":
+        elif trig_option == "tan":
             tempnum = tan(float(tempnum))
         e.delete(0,END)
         e.insert(0,tempnum)
-        
-        
 
+def trigno_funcs_inverse(*args):
+    trig_option2 = trig_val2.get()
+    trig_val2.set("Trignometric Functions Inverse")
+    trigfunc2 = OptionMenu(root, trig_val, *trig_options2)
+    trigfunc2.grid(row=2,column=2,columnspan=3,ipadx=17)
+    if trig_option2 == "Trignometric Functions Inverse" or e.get() == "":
+        pass
+    else:
+        tempnum = e.get()
+        if trig_option2 == "sin⁻¹":
+            tempnum = degrees(asin(float(tempnum)))
+        elif trig_option2 == "cos⁻¹":
+            tempnum = degrees(acos(float(tempnum)))
+        elif trig_option2 == "tan⁻¹":
+            tempnum = degrees(atan(float(tempnum)))
+        e.delete(0,END)
+        e.insert(0,tempnum)
+        
 history_label = Entry(root,width=63,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
 e = Entry(root, width=25,state="normal",font=("Helvetica",20),justify="right",borderwidth=0)
 e.grid(row=1,column=0,columnspan=5)
 
 # defining buttons
-button_1 = Button(root,text = "1",command = lambda: buttonclick('1'),padx = 26,pady = 14,font= "helvetica",bg="white")
+button_1 = Button(root,text = "1",command = lambda: buttonclick('1'),padx = 32,pady = 14,font= "helvetica",bg="white")
 button_2 = Button(root,text = "2",command = lambda: buttonclick('2'),padx = 28,pady = 14,font= "helvetica",bg="white")
 button_3 = Button(root,text = "3",command = lambda: buttonclick('3'),padx = 28,pady = 14,font= "helvetica",bg="white")
 
-button_4 = Button(root,text = "4",command = lambda: buttonclick('4'),padx = 26,pady = 14,font= "helvetica",bg="white")
+button_4 = Button(root,text = "4",command = lambda: buttonclick('4'),padx = 32,pady = 14,font= "helvetica",bg="white")
 button_5 = Button(root,text = "5",command = lambda: buttonclick('5'),padx = 28,pady = 14,font= "helvetica",bg="white")
 button_6 = Button(root,text = "6",command = lambda: buttonclick('6'),padx = 28,pady = 14,font= "helvetica",bg="white")
 
-button_7 = Button(root,text = "7",command = lambda: buttonclick('7'),padx = 26,pady = 14,font= "helvetica",bg="white")
+button_7 = Button(root,text = "7",command = lambda: buttonclick('7'),padx = 32,pady = 14,font= "helvetica",bg="white")
 button_8 = Button(root,text = "8",command = lambda: buttonclick('8'),padx = 28,pady = 14,font= "helvetica",bg="white")
 button_9 = Button(root,text = "9",command = lambda: buttonclick('9'),padx = 28,pady = 14,font= "helvetica",bg="white")
 
 button_0 = Button(root,text = "0",command = lambda: buttonclick('0'),padx = 28,pady = 14,font= "helvetica",bg="white")
 button_decimal = Button(root,text = ".",command = buttondecimal,padx = 31,pady = 14,font= "helvetica",bg="white")
-button_plusminus = Button(root,text = "+/-",command = plusminus,padx = 22,pady = 14,font= "helvetica",bg="white")
+button_plusminus = Button(root,text = "+/-",command = plusminus,padx = 27,pady = 14,font= "helvetica",bg="white")
 button_clear = Button(root,text = "C",command = buttonclear,padx = 29,pady = 14,font= "helvetica")
 button_backspace = Button(root, text = "⌫",command = backspace,padx = 24,pady = 14,font= "helvetica")
 
@@ -259,8 +278,8 @@ button_divide = Button(root,text = "÷",command = lambda: buttonoperator('÷'),p
 button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 26,pady = 14,font= "helvetica",bg="#176cb5",fg="white")
 button_exponent = Button(root,text = "xʸ",command = lambda: buttonoperator('^'),padx = 28,pady = 14,font= "helvetica")
 button_factorial = Button(root,text = "x!",command = lambda: oneoffs('!'),padx = 28,pady = 14,font= "helvetica")
-button_square = Button(root,text = "x²",command = lambda: oneoffs('square'),padx = 24,pady = 14,font= "helvetica")
-button_squareroot = Button(root,text = "√x",command = lambda: oneoffs('root'),padx = 25,pady = 14,font= "helvetica")
+button_square = Button(root,text = "x²",command = lambda: oneoffs('square'),padx = 31,pady = 14,font= "helvetica")
+button_squareroot = Button(root,text = "√x",command = lambda: oneoffs('root'),padx = 24,pady = 14,font= "helvetica")
 
 button_percent = Button(root,text = "%",command = percent,padx = 28,pady = 14,font= "helvetica")
 button_reciprocal = Button(root,text = "1/x",command = lambda: oneoffs('reciprocal'),padx = 23,pady = 14,font= "helvetica")
@@ -270,7 +289,14 @@ trig_val.set("Trignometric Functions")
 trig_options = ["sin","cos","tan"]
 trigfunc = OptionMenu(root, trig_val, *trig_options)
 trig_val.trace("w",trigno_funcs)
-trigfunc.grid(row=2,column=0,columnspan=5)
+trigfunc.grid(row=2,column=0,columnspan=2)
+
+trig_val2 = StringVar()
+trig_val2.set("Trignometric Functions Inverse")
+trig_options2 = ["sin⁻¹","cos⁻¹","tan⁻¹"]
+trigfunc2 = OptionMenu(root, trig_val2, *trig_options2)
+trig_val2.trace("w",trigno_funcs_inverse)
+trigfunc2.grid(row=2,column=2,columnspan=3,ipadx=17)
 
                         
 # placing buttons
