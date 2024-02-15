@@ -22,7 +22,7 @@ def buttonclick(inp):
     if count >= 2 and pas == 0:
         e.delete(0,END)
         pas = 1
-    if sign == "=" or sign == "!" or sign == "square" or sign == "root" or sign == "reciprocal":
+    if sign == "=" or sign == "!" or sign == "square" or sign == "root" or sign == "reciprocal" or sign == "trig" or sign == "trig_inv":
         history_label.delete(0,END)
         e.delete(0,END)
         sign = ""
@@ -212,6 +212,7 @@ def percent():
         e.insert(0,tempnum)
         
 def trigno_funcs(*args):
+    global sign,count
     trig_option = trig_val.get()
     trig_val.set("Trignometric Functions")
     trigfunc = OptionMenu(root, trig_val, *trig_options)
@@ -221,15 +222,24 @@ def trigno_funcs(*args):
     else:
         tempnum = e.get()
         if trig_option == "sin":
-            tempnum = sin(float(tempnum))
+            history_label.insert(END,"sin("+str(tempnum)+")")
+            tempnum = sin(radians(float(tempnum)))
         elif trig_option == "cos":
-            tempnum = cos(float(tempnum))
+            history_label.insert(END,"cos("+str(tempnum)+")")
+            tempnum = cos(radians(float(tempnum)))
         elif trig_option == "tan":
-            tempnum = tan(float(tempnum))
+            history_label.insert(END,"tan("+str(tempnum)+")")
+            tempnum = tan(radians(float(tempnum)))
         e.delete(0,END)
+        count+=1
         e.insert(0,tempnum)
+        if sign != "":
+            pass
+        else:
+            sign = "trig"
 
 def trigno_funcs_inverse(*args):
+    global sign,count
     trig_option2 = trig_val2.get()
     trig_val2.set("Trignometric Functions Inverse")
     trigfunc2 = OptionMenu(root, trig_val, *trig_options2)
@@ -239,13 +249,21 @@ def trigno_funcs_inverse(*args):
     else:
         tempnum = e.get()
         if trig_option2 == "sin⁻¹":
+            history_label.insert(END,"sin⁻¹("+str(tempnum)+")")
             tempnum = degrees(asin(float(tempnum)))
         elif trig_option2 == "cos⁻¹":
+            history_label.insert(END,"cos⁻¹("+str(tempnum)+")")
             tempnum = degrees(acos(float(tempnum)))
         elif trig_option2 == "tan⁻¹":
+            history_label.insert(END,"tan⁻¹("+str(tempnum)+")")
             tempnum = degrees(atan(float(tempnum)))
         e.delete(0,END)
         e.insert(0,tempnum)
+        count += 1
+        if sign != "":
+            pass
+        else:
+            sign = "trig_inv"
         
 history_label = Entry(root,width=63,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
@@ -333,6 +351,7 @@ button_equal.grid(row = 7,column=3)
 button_exponent.grid(row = 6,column=4)
 button_factorial.grid(row = 7,column=4)
 
+root.resizable(False, False)
 
 # Event binding to ignore keyboard input
 e.bind("<Key>", ignore_keyboard_input)
