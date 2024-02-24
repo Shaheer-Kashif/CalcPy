@@ -10,6 +10,7 @@ pas = True
 hist = ""
 result = 0
 oneoff = 0
+status = "enabled"
 
 #Main Window
 root = Tk()
@@ -22,6 +23,10 @@ def ignore_keyboard_input(event):
 
 # Input Number
 def buttonclick(inp):
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
     global count,pas,sign
     if count >= 2 and pas == 0:
         e.delete(0,END)
@@ -36,14 +41,18 @@ def buttonclick(inp):
     
 # Main Operator Function
 def buttonoperator(op):
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
     if e.get() == "":
         pass
     else:
-        global num,num2,sign,count,pas,hist,result,oneoff
-        if ("=" in hist or "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get()) and count == 0:
+        global num,num2,sign,count,pas,hist,result,oneoff,trig_option,trig_option2,hl
+        if ("=" in hist or "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get() or (sign == "trig" or sign == "trig_inv")) and count == 0:
             if "=" in hist:
                 hist = hist.replace("",hist[0:hist.index("=")])
-            elif "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get():
+            elif "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get() or sign == "trig" or sign == "trig_inv":
                 if "!" in history_label.get():
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("!")])
                 elif "²" in history_label.get():
@@ -52,6 +61,11 @@ def buttonoperator(op):
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("√")+1])
                 elif "ᛑ/"in history_label.get():
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("ᛑ/")])
+                elif sign == "trig" or sign == "trig_inv":
+                    if sign == "trig":
+                        hist = history_label.get().replace("",history_label.get()[0:history_label.get().index(trig_option+"("+hl+")")])
+                    elif sign == "trig_inv":
+                        hist = history_label.get().replace("",history_label.get()[0:history_label.get().index(trig_option2+"("+hl+")")])
             history_label.delete(0,END)
         if oneoff == 0:
             hist = e.get() + op
@@ -110,6 +124,10 @@ def buttonoperator(op):
 
 # Decimal Function
 def buttondecimal():
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
     if "." in e.get():
         pass
     else:
@@ -131,6 +149,10 @@ def buttonclear():
     
 # Backspace Function
 def backspace():
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
     if e.get() == "":
         pass
     else:
@@ -142,6 +164,10 @@ def backspace():
 # OneOffs Operation(Square,Factorial,Root)
 def oneoffs(operation):
     global sign
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
     if e.get() == "":
         pass
     else:
@@ -203,6 +229,10 @@ def oneoffs(operation):
       
 # Plus Minus Button Function      
 def plusminus():
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
     if e.get() == "":
         pass
     else:
@@ -213,6 +243,10 @@ def plusminus():
 
 # Percent Button Function
 def percent():
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
     if e.get() == "":
         pass
     else:
@@ -223,7 +257,11 @@ def percent():
         
 #Trigonometric Function Button
 def trigno_funcs(*args):
-    global sign,count,oneoff
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
+    global sign,count,oneoff,trig_option,hl
     trig_option = trig_val.get()
     trig_val.set("Trignometric Functions")
     trigfunc = OptionMenu(root, trig_val, *trig_options)
@@ -232,21 +270,25 @@ def trigno_funcs(*args):
         pass
     else:
         tempnum = e.get()
-        if trig_option == "sin":
-            history_label.insert(END,"sin("+str(tempnum)+")")
-            tempnum = sin(radians(float(tempnum)))
-        elif trig_option == "cos":
-            history_label.insert(END,"cos("+str(tempnum)+")")
-            tempnum = cos(radians(float(tempnum)))
-        elif trig_option == "tan":
-            history_label.insert(END,"tan("+str(tempnum)+")")
-            tempnum = tan(radians(float(tempnum)))
+        hl = tempnum
+        try:
+            if trig_option == "sin":
+                history_label.insert(END,"sin("+str(tempnum)+")")
+                tempnum = sin(radians(float(tempnum)))
+            elif trig_option == "cos":
+                history_label.insert(END,"cos("+str(tempnum)+")")
+                tempnum = cos(radians(float(tempnum)))
+            elif trig_option == "tan":
+                history_label.insert(END,"tan("+str(tempnum)+")")
+                tempnum = tan(radians(float(tempnum)))
+        except ValueError:
+            tempnum = "Invalid Input"
+            status = "disabled"
         e.delete(0,END)
-        count+=1
         e.insert(0,tempnum)
         if sign != None:
-            pass
             oneoff = 1
+            count += 1
         else:
             sign = "trig"
             
@@ -259,7 +301,11 @@ trigfunc.grid(row=2,column=0,columnspan=2)
 
 #Trigonometric Inverse Function Button
 def trigno_funcs_inverse(*args):
-    global sign,count,oneoff
+    global status
+    if status == "disabled":
+        buttonclear()
+        status = "enabled"
+    global sign,count,oneoff,trig_option2,hl
     trig_option2 = trig_val2.get()
     trig_val2.set("Trignometric Inverse Functions")
     trigfunc2 = OptionMenu(root, trig_val2, *trig_options2)
@@ -268,21 +314,25 @@ def trigno_funcs_inverse(*args):
         pass
     else:
         tempnum = e.get()
-        if trig_option2 == "sin⁻¹":
-            history_label.insert(END,"sin⁻¹("+str(tempnum)+")")
-            tempnum = degrees(asin(float(tempnum)))
-        elif trig_option2 == "cos⁻¹":
-            history_label.insert(END,"cos⁻¹("+str(tempnum)+")")
-            tempnum = degrees(acos(float(tempnum)))
-        elif trig_option2 == "tan⁻¹":
-            history_label.insert(END,"tan⁻¹("+str(tempnum)+")")
-            tempnum = degrees(atan(float(tempnum)))
+        hl = tempnum
+        try:
+            if trig_option2 == "sin⁻¹":
+                history_label.insert(END,"sin⁻¹("+str(tempnum)+")")
+                tempnum = degrees(asin(float(tempnum)))
+            elif trig_option2 == "cos⁻¹":
+                history_label.insert(END,"cos⁻¹("+str(tempnum)+")")
+                tempnum = degrees(acos(float(tempnum)))
+            elif trig_option2 == "tan⁻¹":
+                history_label.insert(END,"tan⁻¹("+str(tempnum)+")")
+                tempnum = degrees(atan(float(tempnum)))
+        except ValueError:
+            tempnum = "Invalid Input"
+            status = "disabled"
         e.delete(0,END)
         e.insert(0,tempnum)
-        count += 1
         if sign != None:
-            pass
             oneoff = 1
+            count += 1
         else:
             sign = "trig_inv"
             
@@ -315,9 +365,11 @@ for rows in range(6,3,-1):
 # Basic Arithmetic Operations and their Placing
 arith_ope = ["+","-","×","÷","^"]
 for index,k in enumerate(arith_ope):
-    if k == "-" or k == "^":
+    if k == "-" or k == "^" or k == "×":
         if k == "^":
             locals()["button_"+str(k)] = Button(root,text = "xʸ",command = lambda j = k: buttonoperator(str(j)),padx = 24,pady = 14,font= "helvetica")
+        elif k == "×":
+            locals()["button_"+str(k)] = Button(root,text = k,command = lambda j = "x": buttonoperator("x"),padx = 26,pady = 14,font= "helvetica")
         else:
             locals()["button_"+str(k)] = Button(root,text = str(k),command = lambda j = k: buttonoperator(str(j)),padx = 28,pady = 14,font= "helvetica")
     else:
