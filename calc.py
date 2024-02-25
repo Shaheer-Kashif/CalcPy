@@ -1,5 +1,6 @@
 from tkinter import *
 from math import *
+import threading
 
 #Main Variables
 num = 0
@@ -10,6 +11,7 @@ pas = True
 hist = ""
 result = 0
 oneoff = 0
+start = 1
 status = "enabled"
 
 #Main Window
@@ -23,7 +25,7 @@ def ignore_keyboard_input(event):
 
 # Input Number
 def buttonclick(inp):
-    global status
+    global status,start
     if status == "disabled":
         buttonclear()
         status = "enabled"
@@ -35,6 +37,9 @@ def buttonclick(inp):
         history_label.delete(0,END)
         e.delete(0,END)
         sign = ""
+    if start == 1:
+        e.delete(0,END)
+        start = 0
     additional = e.get()
     e.delete(0,END)
     e.insert(0,additional+inp)
@@ -142,7 +147,7 @@ def buttondecimal():
     
 # Reset Function
 def buttonclear():
-    global hist,num,num2,sign,count,pas,result
+    global hist,num,num2,sign,count,pas,result,start
     hist = ""
     num = 0
     num2 = 0
@@ -150,8 +155,10 @@ def buttonclear():
     count = 0
     pas = True
     result = 0
+    start = 1
     history_label.delete(0,END)
     e.delete(0,END)
+    e.insert(0,0)
     
 # Backspace Function
 def backspace():
@@ -385,6 +392,18 @@ history_label = Entry(root,width=68,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
 e = Entry(root, width=27,state="normal",font=("Helvetica",20),justify="right",borderwidth=0)
 e.grid(row=1,column=0,columnspan=5)
+e.insert(0,0)
+
+def calc_limit():
+    global status
+    while True:
+        if len(e.get()) > 27:
+            e.delete(0,END)
+            e.insert(0,"Limit Reached")
+            status = "disabled"
+    
+thread = threading.Thread(target=calc_limit)
+thread.start()
 
 # defining buttons 1-9
 for i in range(0,10):
