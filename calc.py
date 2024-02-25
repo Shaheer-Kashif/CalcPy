@@ -48,19 +48,19 @@ def buttonoperator(op):
     if e.get() == "":
         pass
     else:
-        global num,num2,sign,count,pas,hist,result,oneoff,trig_option,trig_option2,hl
-        if ("=" in hist or "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get() or (sign == "trig" or sign == "trig_inv")) and count == 0:
+        global num,num2,sign,count,pas,hist,result,oneoff,trig_option,trig_option2,hl,restempnum
+        if ("=" in hist or "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "𝟭/"in history_label.get() or (sign == "trig" or sign == "trig_inv")) and count == 0:
             if "=" in hist:
                 hist = hist.replace("",hist[0:hist.index("=")])
-            elif "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "ᛑ/"in history_label.get() or sign == "trig" or sign == "trig_inv":
+            elif "!" in history_label.get() or "²" in history_label.get() or "√" in history_label.get() or "𝟭/"in history_label.get() or sign == "trig" or sign == "trig_inv":
                 if "!" in history_label.get():
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("!")])
                 elif "²" in history_label.get():
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("²")])
                 elif "√" in history_label.get():
                     hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("√")+1])
-                elif "ᛑ/"in history_label.get():
-                    hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("ᛑ/")])
+                elif "𝟭/"in history_label.get():
+                    hist = history_label.get().replace("",history_label.get()[0:history_label.get().index("𝟭/")])
                 elif sign == "trig" or sign == "trig_inv":
                     if sign == "trig":
                         hist = history_label.get().replace("",history_label.get()[0:history_label.get().index(trig_option+"("+hl+")")])
@@ -68,7 +68,13 @@ def buttonoperator(op):
                         hist = history_label.get().replace("",history_label.get()[0:history_label.get().index(trig_option2+"("+hl+")")])
             history_label.delete(0,END)
         if oneoff == 0:
-            hist = e.get() + op
+            if sign == "trig" or sign == "trig_inv":
+                if sign == "trig":
+                    hist = trig_option+"("+hl+")" + op
+                elif sign == "trig_inv":
+                    hist = trig_option2+"("+hl+")" + op
+            else:
+                hist = e.get() + op
         else: 
             hist = op
             oneoff = 0
@@ -172,30 +178,45 @@ def oneoffs(operation):
         pass
     else:
         if sign != None:
+            if sign == "=":
+                history_label.delete(0,END)
             global num2,count,oneoff
             if operation == '!':
                 num2 = e.get()
+                
                 history_label.insert(END,str(num2)+"!")
-                lis = list(range(2,int(num2)+1))
-                num2 = 1
-                for res in lis:
-                    num2 *= res
+                try:
+                    lis = list(range(2,int(num2)+1))
+                    num2 = 1
+                    for res in lis:
+                        num2 *= res
+                except ValueError:
+                    num2 = "Invalid Input"
+                    status = "disabled"
             elif operation == 'square' or operation == 'root' or operation == 'reciprocal':
                 num2 = e.get()
                 if operation == 'root':
-                    history_label.insert(END,"√"+str(num2))
-                    num2 = sqrt(float(num2))
+                    try:
+                        history_label.insert(END,"√"+str(num2))
+                        num2 = sqrt(float(num2))
+                    except ValueError:
+                        num2 = "Invalid Input"
+                        status = "disabled"
                 elif operation == 'square':
                     history_label.insert(END,str(num2)+"²")
                     num2 = int(num2)*int(num2)
                 else:
-                    history_label.insert(END,"(ᛑ/"+str(num2)+")")
+                    history_label.insert(END,"(𝟭/"+str(num2)+")")
                     num2 = 1/float(num2)
                     
             e.delete(0,END)
             e.insert(0,num2)
-            oneoff = 1
-            count += 1
+            if sign == "=":
+                history_label.delete(0,END)
+                count = 0
+            else:
+                oneoff = 1
+                count += 1
                        
         else:
             if operation == '!':
@@ -203,9 +224,13 @@ def oneoffs(operation):
                 history_label.delete(0,END)
                 history_label.insert(0,str(num)+"!")
                 result = 1
-                lis = list(range(2,int(num)+1))
-                for num in lis:
-                    result *= num
+                try:
+                    lis = list(range(2,int(num)+1))
+                    for num in lis:
+                        result *= num
+                except ValueError:
+                    result = "Invalid Input"
+                    status = "disabled"
                 e.delete(0,END)
                 e.insert(0,result)
                 
@@ -213,13 +238,17 @@ def oneoffs(operation):
                 num = e.get()
                 history_label.delete(0,END)
                 if operation == 'root':
-                    history_label.insert(0,"√"+str(num))
-                    result = sqrt(float(num))
+                    try:
+                        history_label.insert(0,"√"+str(num))
+                        result = sqrt(float(num))
+                    except ValueError:
+                        result = "Invalid Input"
+                        status = "disabled"
                 elif operation == 'square':
                     history_label.insert(0,str(num)+"²")
                     result = int(num)*int(num)
                 else:
-                    history_label.insert(0,"ᛑ/"+str(num))
+                    history_label.insert(0,"𝟭/"+str(num))
                     result = 1/float(num)
                 
                 e.delete(0,END)
@@ -238,6 +267,10 @@ def plusminus():
     else:
         tempnum = e.get()
         tempnum = -1*(float(tempnum))
+        if tempnum  == int(tempnum):
+            tempnum = int(tempnum)
+        else:
+            tempnum = round(tempnum,8)
         e.delete(0,END)
         e.insert(0,tempnum)
 
@@ -261,7 +294,7 @@ def trigno_funcs(*args):
     if status == "disabled":
         buttonclear()
         status = "enabled"
-    global sign,count,oneoff,trig_option,hl
+    global sign,count,oneoff,trig_option,hl,restempnum
     trig_option = trig_val.get()
     trig_val.set("Trignometric Functions")
     trigfunc = OptionMenu(root, trig_val, *trig_options)
@@ -273,24 +306,26 @@ def trigno_funcs(*args):
         hl = tempnum
         try:
             if trig_option == "sin":
-                history_label.insert(END,"sin("+str(tempnum)+")")
-                tempnum = sin(radians(float(tempnum)))
+                restempnum = sin(radians(float(tempnum)))
             elif trig_option == "cos":
-                history_label.insert(END,"cos("+str(tempnum)+")")
-                tempnum = cos(radians(float(tempnum)))
+                restempnum = cos(radians(float(tempnum)))
             elif trig_option == "tan":
-                history_label.insert(END,"tan("+str(tempnum)+")")
-                tempnum = tan(radians(float(tempnum)))
+                restempnum = tan(radians(float(tempnum)))
         except ValueError:
-            tempnum = "Invalid Input"
+            restempnum = "Invalid Input"
             status = "disabled"
         e.delete(0,END)
-        e.insert(0,tempnum)
+        e.insert(0,restempnum)
         if sign != None:
-            oneoff = 1
-            count += 1
+            if sign == "=":
+                history_label.delete(0,END)
+                count = 0
+            else:
+                oneoff = 1
+                count += 1
         else:
             sign = "trig"
+        history_label.insert(END,trig_option+"("+str(tempnum)+")")
             
 trig_val = StringVar()
 trig_val.set("Trignometric Functions")
@@ -305,7 +340,7 @@ def trigno_funcs_inverse(*args):
     if status == "disabled":
         buttonclear()
         status = "enabled"
-    global sign,count,oneoff,trig_option2,hl
+    global sign,count,oneoff,trig_option2,hl,restempnum
     trig_option2 = trig_val2.get()
     trig_val2.set("Trignometric Inverse Functions")
     trigfunc2 = OptionMenu(root, trig_val2, *trig_options2)
@@ -317,25 +352,27 @@ def trigno_funcs_inverse(*args):
         hl = tempnum
         try:
             if trig_option2 == "sin⁻¹":
-                history_label.insert(END,"sin⁻¹("+str(tempnum)+")")
-                tempnum = degrees(asin(float(tempnum)))
+                restempnum = degrees(asin(float(tempnum)))
             elif trig_option2 == "cos⁻¹":
-                history_label.insert(END,"cos⁻¹("+str(tempnum)+")")
-                tempnum = degrees(acos(float(tempnum)))
+                restempnum = degrees(acos(float(tempnum)))
             elif trig_option2 == "tan⁻¹":
-                history_label.insert(END,"tan⁻¹("+str(tempnum)+")")
-                tempnum = degrees(atan(float(tempnum)))
+                restempnum = degrees(atan(float(tempnum)))
         except ValueError:
-            tempnum = "Invalid Input"
+            restempnum = "Invalid Input"
             status = "disabled"
         e.delete(0,END)
-        e.insert(0,tempnum)
+        e.insert(0,restempnum)
         if sign != None:
-            oneoff = 1
-            count += 1
+            if sign == "=":
+                history_label.delete(0,END)
+                count = 0
+            else:
+                oneoff = 1
+                count += 1
         else:
             sign = "trig_inv"
-            
+        history_label.insert(END,trig_option2+"("+str(tempnum)+")")
+        
 trig_val2 = StringVar()
 trig_val2.set("Trignometric Inverse Functions")
 trig_options2 = ["sin⁻¹","cos⁻¹","tan⁻¹"]
