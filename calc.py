@@ -1,6 +1,6 @@
 from tkinter import *
 from math import *
-import threading
+import threading,time
 
 #Main Variables
 num = 0
@@ -184,10 +184,10 @@ def oneoffs(operation):
     if e.get() == "":
         pass
     else:
-        if sign != None:
+        global num2,count,oneoff
+        if sign != None and count > 0:
             if sign == "=":
                 history_label.delete(0,END)
-            global num2,count,oneoff
             if operation == '!':
                 num2 = e.get()
                 
@@ -211,10 +211,14 @@ def oneoffs(operation):
                         status = "disabled"
                 elif operation == 'square':
                     history_label.insert(END,str(num2)+"²")
-                    num2 = int(num2)*int(num2)
+                    num2 = float(num2)*float(num2)
                 else:
-                    history_label.insert(END,"(𝟭/"+str(num2)+")")
-                    num2 = 1/float(num2)
+                    try:
+                        history_label.insert(END,"(𝟭/"+str(num2)+")")
+                        num2 = 1/float(num2)
+                    except ZeroDivisionError:
+                        num2 = "Cannot Divide by Zero"
+                        status = "disabled"
                     
             e.delete(0,END)
             e.insert(0,num2)
@@ -253,10 +257,14 @@ def oneoffs(operation):
                         status = "disabled"
                 elif operation == 'square':
                     history_label.insert(0,str(num)+"²")
-                    result = int(num)*int(num)
+                    result = float(num)*float(num)
                 else:
-                    history_label.insert(0,"𝟭/"+str(num))
-                    result = 1/float(num)
+                    try:
+                        history_label.insert(0,"𝟭/"+str(num))
+                        result = 1/float(num)
+                    except ZeroDivisionError:
+                        result = "Cannot Divide by Zero"
+                        status = "disabled"
                 
                 e.delete(0,END)
                 e.insert(0,result)
@@ -301,10 +309,11 @@ def trigno_funcs(*args):
     if status == "disabled":
         buttonclear()
         status = "enabled"
-    global sign,count,oneoff,trig_option,hl,restempnum
+    global sign,count,oneoff,trig_option,hl
     trig_option = trig_val.get()
     trig_val.set("Trignometric Functions")
     trigfunc = OptionMenu(root, trig_val, *trig_options)
+    trigfunc.config(font=("helvetica",10))
     trigfunc.grid(row=2,column=0,columnspan=2)
     if trig_option == "Trignometric Functions" or e.get() == "":
         pass
@@ -323,7 +332,7 @@ def trigno_funcs(*args):
             status = "disabled"
         e.delete(0,END)
         e.insert(0,restempnum)
-        if sign != None:
+        if sign != None and count > 0:
             if sign == "=":
                 history_label.delete(0,END)
                 count = 0
@@ -338,6 +347,7 @@ trig_val = StringVar()
 trig_val.set("Trignometric Functions")
 trig_options = ["sin","cos","tan"]
 trigfunc = OptionMenu(root, trig_val, *trig_options)
+trigfunc.config(font=("helvetica",10))
 trig_val.trace("w",trigno_funcs)
 trigfunc.grid(row=2,column=0,columnspan=2)
 
@@ -347,11 +357,12 @@ def trigno_funcs_inverse(*args):
     if status == "disabled":
         buttonclear()
         status = "enabled"
-    global sign,count,oneoff,trig_option2,hl,restempnum
+    global sign,count,oneoff,trig_option2,hl
     trig_option2 = trig_val2.get()
     trig_val2.set("Trignometric Inverse Functions")
     trigfunc2 = OptionMenu(root, trig_val2, *trig_options2)
-    trigfunc2.grid(row=2,column=2,columnspan=3,ipadx=17)
+    trigfunc2.config(font=("helvetica",10))
+    trigfunc2.grid(row=2,column=2,columnspan=3,ipadx=15)
     if trig_option2 == "Trignometric Inverse Functions" or e.get() == "":
         pass
     else:
@@ -369,7 +380,7 @@ def trigno_funcs_inverse(*args):
             status = "disabled"
         e.delete(0,END)
         e.insert(0,restempnum)
-        if sign != None:
+        if sign != None and count > 0:
             if sign == "=":
                 history_label.delete(0,END)
                 count = 0
@@ -384,23 +395,25 @@ trig_val2 = StringVar()
 trig_val2.set("Trignometric Inverse Functions")
 trig_options2 = ["sin⁻¹","cos⁻¹","tan⁻¹"]
 trigfunc2 = OptionMenu(root, trig_val2, *trig_options2)
+trigfunc2.config(font=("helvetica",10))
 trig_val2.trace("w",trigno_funcs_inverse)
-trigfunc2.grid(row=2,column=2,columnspan=3,ipadx=17)
+trigfunc2.grid(row=2,column=2,columnspan=3,ipadx=15)
         
 #History and Calculation Label
-history_label = Entry(root,width=68,justify="right",borderwidth=0,fg="#3A3A3A")
+history_label = Entry(root,width=70,justify="right",borderwidth=0,fg="#3A3A3A")
 history_label.grid(row = 0,column=0,columnspan=5)
-e = Entry(root, width=27,state="normal",font=("Helvetica",20),justify="right",borderwidth=0)
+e = Entry(root, width=28,state="normal",font=("Helvetica",20),justify="right",borderwidth=0)
 e.grid(row=1,column=0,columnspan=5)
 e.insert(0,0)
 
 def calc_limit():
-    global status
+    global status,e
     while True:
         if len(e.get()) > 27:
             e.delete(0,END)
             e.insert(0,"Limit Reached")
             status = "disabled"
+        time.sleep(0.5)
     
 thread = threading.Thread(target=calc_limit)
 thread.start()
@@ -408,9 +421,9 @@ thread.start()
 # defining buttons 1-9
 for i in range(0,10):
     if i == 1 or i == 4 or i == 7:
-        locals()["button_"+str(i)] = Button(root,text = str(i) ,command = lambda x = i: buttonclick(str(x)),padx = 32,pady = 14,font= "helvetica",bg="white")
+        locals()["button_"+str(i)] = Button(root,text = str(i) ,command = lambda x = i: buttonclick(str(x)),padx = 32,pady = 14,font= ("helvetica",15),bg="white")
     else:
-        locals()["button_"+str(i)] = Button(root,text = str(i),command = lambda x = i: buttonclick(str(x)),padx = 28,pady = 14,font= "helvetica",bg="white")
+        locals()["button_"+str(i)] = Button(root,text = str(i),command = lambda x = i: buttonclick(str(x)),padx = 28,pady = 14,font= ("helvetica",15),bg="white")
 # placing buttons 1-9
 key = 1
 for rows in range(6,3,-1):
@@ -421,31 +434,33 @@ for rows in range(6,3,-1):
 # Basic Arithmetic Operations and their Placing
 arith_ope = ["+","-","×","÷","^"]
 for index,k in enumerate(arith_ope):
-    if k == "-" or k == "^" or k == "×":
+    if k == "-" or k == "^" or k == "×" or k == "+":
         if k == "^":
-            locals()["button_"+str(k)] = Button(root,text = "xʸ",command = lambda j = k: buttonoperator(str(j)),padx = 24,pady = 14,font= "helvetica")
+            locals()["button_"+str(k)] = Button(root,text = "xʸ",command = lambda j = k: buttonoperator(str(j)),padx = 24,pady = 14,font= ("helvetica",15))
         elif k == "×":
-            locals()["button_"+str(k)] = Button(root,text = k,command = lambda j = "x": buttonoperator("x"),padx = 26,pady = 14,font= "helvetica")
+            locals()["button_"+str(k)] = Button(root,text = k,command = lambda j = "x": buttonoperator("x"),padx = 24,pady = 14,font= ("helvetica",15))
+        elif k == "+":
+            locals()["button_"+str(k)] = Button(root,text = str(k),command = lambda j = k: buttonoperator(str(j)),padx = 24,pady = 14,font= ("helvetica",15))
         else:
-            locals()["button_"+str(k)] = Button(root,text = str(k),command = lambda j = k: buttonoperator(str(j)),padx = 28,pady = 14,font= "helvetica")
+            locals()["button_"+str(k)] = Button(root,text = str(k),command = lambda j = k: buttonoperator(str(j)),padx = 27,pady = 14,font= ("helvetica",15))
     else:
-        locals()["button_"+str(k)] = Button(root,text = str(k),command = lambda j = k: buttonoperator(str(j)),padx = 26,pady = 14,font= "helvetica")
+        locals()["button_"+str(k)] = Button(root,text = str(k),command = lambda j = k: buttonoperator(str(j)),padx = 25,pady = 14,font= ("helvetica",15))
     locals()["button_"+str(k)].grid(row = index+3,column=3)  
   
 # Misc Buttons  
-button_decimal = Button(root,text = ".",command = buttondecimal,padx = 31,pady = 14,font= "helvetica",bg="white")
-button_plusminus = Button(root,text = "+/-",command = plusminus,padx = 27,pady = 14,font= "helvetica",bg="white")
-button_clear = Button(root,text = "C",command = buttonclear,padx = 29,pady = 14,font= "helvetica")
-button_backspace = Button(root, text = "⌫",command = backspace,padx = 24,pady = 14,font= "helvetica")
+button_decimal = Button(root,text = ".",command = buttondecimal,padx = 31,pady = 14,font= ("helvetica",15),bg="white")
+button_plusminus = Button(root,text = "+/-",command = plusminus,padx = 25,pady = 14,font= ("helvetica",15),bg="white")
+button_clear = Button(root,text = "C",command = buttonclear,padx = 29,pady = 14,font= ("helvetica",15))
+button_backspace = Button(root, text = "⌫",command = backspace,padx = 23,pady = 14,font= ("helvetica",15))
 
-button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 30,pady = 14,font= "helvetica",bg="#176cb5",fg="white")
+button_equal = Button(root,text = "=",command = lambda: buttonoperator('='),padx = 30,pady = 14,font= ("helvetica",15),bg="#176cb5",fg="white")
 
-button_factorial = Button(root,text = "x!",command = lambda: oneoffs('!'),padx = 28,pady = 14,font= "helvetica")
-button_square = Button(root,text = "x²",command = lambda: oneoffs('square'),padx = 31,pady = 14,font= "helvetica")
-button_squareroot = Button(root,text = "√x",command = lambda: oneoffs('root'),padx = 24,pady = 14,font= "helvetica")
+button_factorial = Button(root,text = "x!",command = lambda: oneoffs('!'),padx = 28,pady = 14,font= ("helvetica",15))
+button_square = Button(root,text = "x²",command = lambda: oneoffs('square'),padx = 30,pady = 14,font= ("helvetica",15))
+button_squareroot = Button(root,text = "√x",command = lambda: oneoffs('root'),padx = 24,pady = 14,font= ("helvetica",15))
 
-button_percent = Button(root,text = "%",command = percent,padx = 28,pady = 14,font= "helvetica")
-button_reciprocal = Button(root,text = "1/x",command = lambda: oneoffs('reciprocal'),padx = 23,pady = 14,font= "helvetica")
+button_percent = Button(root,text = "%",command = percent,padx = 27,pady = 14,font= ("helvetica",15))
+button_reciprocal = Button(root,text = "1/x",command = lambda: oneoffs('reciprocal'),padx = 21,pady = 14,font= ("helvetica",15))
     
 # Misc Buttons Placement
 button_plusminus.grid(row=7,column=0)
