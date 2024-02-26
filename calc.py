@@ -96,17 +96,24 @@ def buttonoperator(op):
                 elif sign == "x":
                     result = float(num) * float(num2)
                 elif sign == "÷":
-                    result = float(num) / float(num2)
+                    try:
+                        result = float(num) / float(num2)
+                    except ZeroDivisionError:
+                        result = "Cannot Divide by Zero"
+                        status = "disabled"
                 elif sign == "^":
                     result = pow(float(num),float(num2))
                 num = result
                 pas = 0
                 sign = op
                 e.delete(0,END)
-                if result == int(result):
-                    result = int(result)
-                else:
-                    result = round(result,8)
+                try:
+                    if result == int(result):
+                        result = int(result)
+                    else:
+                        result = round(result,8)
+                except ValueError:
+                    pass
                 e.insert(0,result)
             else:
                 num = e.get()
@@ -122,15 +129,22 @@ def buttonoperator(op):
             elif sign == "x":
                 result = float(num) * float(num2)
             elif sign == "÷":
-                result = float(num) / float(num2)
+                try:
+                    result = float(num) / float(num2)
+                except ZeroDivisionError:
+                    result = "Cannot Divide by Zero"
+                    status = "disabled"
             elif sign == "^":
                 result = pow(float(num),float(num2))
             sign = op
             e.delete(0,END)
-            if result == int(result):
-                result = int(result)
-            else:
-                result = round(result,8)
+            try:
+                if result == int(result):
+                    result = int(result)
+                else:
+                    result = round(result,8)
+            except ValueError:
+                pass
             e.insert(0,result)
 
 # Decimal Function
@@ -190,7 +204,6 @@ def oneoffs(operation):
                 history_label.delete(0,END)
             if operation == '!':
                 num2 = e.get()
-                
                 history_label.insert(END,str(num2)+"!")
                 try:
                     lis = list(range(2,int(num2)+1))
@@ -221,6 +234,13 @@ def oneoffs(operation):
                         status = "disabled"
                     
             e.delete(0,END)
+            try:
+                if num2 == int(num2):
+                    num2 = int(num2)
+                else:
+                    num2 = round(num2,8)
+            except ValueError:
+                pass
             e.insert(0,num2)
             if sign == "=":
                 history_label.delete(0,END)
@@ -267,6 +287,13 @@ def oneoffs(operation):
                         status = "disabled"
                 
                 e.delete(0,END)
+                try:
+                    if result == int(result):
+                        result = int(result)
+                    else:
+                        result = round(result,8)
+                except ValueError:
+                    pass
                 e.insert(0,result)
                 
             sign = operation
