@@ -84,7 +84,6 @@ def buttonoperator(op):
             hist = op
             oneoff = 0
         history_label.insert(END,hist)
-        history_label.grid(row = 0,column=0,columnspan=5)
         if op == "+" or op == "-" or op == "x" or op == "÷" or op == "^":
             count += 1
             if count >= 2:
@@ -176,12 +175,14 @@ def buttonclear():
     
 # Backspace Function
 def backspace():
-    global status
+    global status,sign
     if status == "disabled":
         buttonclear()
         status = "enabled"
     if e.get() == "":
         pass
+    elif sign == "=":
+        history_label.delete(0,END)
     else:
         temp = e.get()
         e.delete(0,END)
@@ -200,8 +201,6 @@ def oneoffs(operation):
     else:
         global num2,count,oneoff
         if sign != None and count > 0:
-            if sign == "=":
-                history_label.delete(0,END)
             if operation == '!':
                 num2 = e.get()
                 history_label.insert(END,str(num2)+"!")
@@ -234,6 +233,7 @@ def oneoffs(operation):
                         status = "disabled"
                     
             e.delete(0,END)
+            
             try:
                 if num2 == int(num2):
                     num2 = int(num2)
@@ -241,6 +241,7 @@ def oneoffs(operation):
                     num2 = round(num2,8)
             except ValueError:
                 pass
+            
             e.insert(0,num2)
             if sign == "=":
                 history_label.delete(0,END)
@@ -250,6 +251,8 @@ def oneoffs(operation):
                 count += 1
                        
         else:
+            if sign == '!' or  sign == 'square' or sign == 'root' or sign == 'reciprocal':
+                history_label.delete(0,END)
             if operation == '!':
                 num = e.get()
                 history_label.delete(0,END)
@@ -280,7 +283,7 @@ def oneoffs(operation):
                     result = float(num)*float(num)
                 else:
                     try:
-                        history_label.insert(0,"𝟭/"+str(num))
+                        history_label.insert(0,"(𝟭/"+str(num)+")")
                         result = 1/float(num)
                     except ZeroDivisionError:
                         result = "Cannot Divide by Zero"
@@ -298,7 +301,7 @@ def oneoffs(operation):
                 
             sign = operation
       
-# Plus Minus Button Function      
+# Plus Minus Button Function
 def plusminus():
     global status
     if status == "disabled":
@@ -337,6 +340,8 @@ def trigno_funcs(*args):
         buttonclear()
         status = "enabled"
     global sign,count,oneoff,trig_option,hl
+    if sign == "trig" or sign == "trig_inv":
+        history_label.delete(0,END)
     trig_option = trig_val.get()
     trig_val.set("Trignometric Functions")
     trigfunc = OptionMenu(root, trig_val, *trig_options)
@@ -358,8 +363,15 @@ def trigno_funcs(*args):
             restempnum = "Invalid Input"
             status = "disabled"
         e.delete(0,END)
+        try:
+            if restempnum == int(restempnum):
+                restempnum = int(restempnum)
+            else:
+                restempnum = round(restempnum,8)
+        except ValueError:
+            pass
         e.insert(0,restempnum)
-        if sign != None and count > 0:
+        if sign != None and count >= 0:
             if sign == "=":
                 history_label.delete(0,END)
                 count = 0
@@ -385,6 +397,8 @@ def trigno_funcs_inverse(*args):
         buttonclear()
         status = "enabled"
     global sign,count,oneoff,trig_option2,hl
+    if sign == "trig" or sign == "trig_inv":
+        history_label.delete(0,END)
     trig_option2 = trig_val2.get()
     trig_val2.set("Trignometric Inverse Functions")
     trigfunc2 = OptionMenu(root, trig_val2, *trig_options2)
@@ -406,6 +420,15 @@ def trigno_funcs_inverse(*args):
             restempnum = "Invalid Input"
             status = "disabled"
         e.delete(0,END)
+        
+        try:
+            if restempnum == int(restempnum):
+                restempnum = int(restempnum)
+            else:
+                restempnum = round(restempnum,8)
+        except ValueError:
+            pass
+        
         e.insert(0,restempnum)
         if sign != None and count > 0:
             if sign == "=":
@@ -437,12 +460,13 @@ def calc_limit():
     global status,e
     while True:
         if len(e.get()) > 27:
+            formatted_result = f"{float(e.get()):e}"
             e.delete(0,END)
-            e.insert(0,"Limit Reached")
-            status = "disabled"
-        time.sleep(0.5)
+            e.insert(0,formatted_result)
+        time.sleep(0.2)
     
 thread = threading.Thread(target=calc_limit)
+thread.daemon = True
 thread.start()
 
 # defining buttons 1-9
