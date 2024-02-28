@@ -135,6 +135,8 @@ def buttonoperator(op):
                     status = "disabled"
             elif sign == "^":
                 result = pow(float(num),float(num2))
+            else:
+                result = float(num2)
             sign = op
             e.delete(0,END)
             try:
