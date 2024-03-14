@@ -465,6 +465,12 @@ def calc_limit():
             formatted_result = f"{float(e.get()):e}"
             e.delete(0,END)
             e.insert(0,formatted_result)
+            
+        if e.get()[0:2] == "-0":
+            temp = e.get()
+            temp = temp.replace("-","")
+            e.delete(0,END)
+            e.insert(0,temp)
         time.sleep(0.2)
     
 thread = threading.Thread(target=calc_limit)
